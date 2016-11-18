@@ -1,0 +1,183 @@
+#!/usr/bin/env node
+
+"use strict";
+
+const cmd = require('commander');
+const cp = require('child_process');
+const fs = require('fs');
+const config = require('./mock_server/doumi_config');
+const server = require('./mock_server/server');
+var chalk = require('chalk');
+var error = chalk.bold.red;
+
+const gitignoreTpl = require('./gitignoreTpl');
+
+const pcCommonUri = 'git@git.corp.doumi.com:doumi_browser/common_pc.git';
+const mCommonUri = 'git@git.corp.doumi.com:doumi_browser/common_m.git';
+
+let projectRootDir = process.cwd() + '/';
+
+cmd.version('1.0.0')
+
+cmd.command('init <pc|m>')
+    .description('在非空目录创建新项目并初始化')
+    .option('-f, --force', '强制在当前目录创建项目')
+    .action((type, options) => {
+        if (options.force) {
+            init(type);
+        } else {
+            if (fs.readdirSync(projectRootDir).length) {
+                console.log('  当前目录不为空,请选择空目录创建项目!');
+            } else {
+                init(type);
+            }
+
+        }
+    })
+
+cmd.command('update')
+    .description('更新common模块')
+    .action(() => {
+        try {
+            console.log('开始更新...')
+            let bedsLog = require(projectRootDir + '.beds.log.json');
+            let projectType = bedsLog.projectType;
+            if (!projectType) {
+                throw new Error('not type')
+            }
+            cloneCommonModule(bedsLog.projectType).then(() => {
+                genBedsLog(projectType);
+                console.log('更新完成!');
+            });
+        } catch(e) {
+            console.log(error('  请先初始化项目!如果项目已进行过初始化,请联系guoyang@doumi.com'));
+        }
+    })
+
+cmd.command('server')
+    .description('启动mock-server')
+    .action(() => {
+        startupServer();
+    })
+
+cmd.parse(process.argv);
+if (!process.argv.slice(2).length){
+   cmd.help();
+}
+
+
+function init(type) {
+    console.log('生成项目目录结构...');
+    const dirs = [
+        projectRootDir,
+        projectRootDir + 'view/',
+        projectRootDir + 'proto_view/',
+        projectRootDir + 'static/',
+        projectRootDir + 'static/css/',
+        projectRootDir + 'static/less/',
+        projectRootDir + 'static/js/',
+        projectRootDir + 'static/img/'
+    ];
+    dirs.forEach(dir => createDir(dir));
+    console.log('克隆通用组件...');
+    cloneCommonModule(type).then(() => {
+        genMockServerConfig();
+        genGitignore();
+        genBedsLog(type);
+        console.log('创建完毕!');
+    })
+}
+
+//创建目录
+function createDir(path) {
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path)
+    }
+}
+
+function cloneCommonModule(type) {
+    return new Promise((resolve, reject) => {
+        let uri = '';
+        switch (type) {
+            case 'pc' :
+                uri = pcCommonUri;
+                break;
+            case 'm' :
+                uri = mCommonUri;
+                break;
+        }
+        if (fs.existsSync('./common')) {
+            cp.exec('rm -rf ./common', function() {
+                cloneCommon();
+            });
+        } else {
+            cloneCommon();
+        }
+        function cloneCommon() {
+            let cmdStr = 'mkdir .tmp_common && cd .tmp_common &&  git init && git remote add -f origin ' + uri + ' && git config core.sparsecheckout true && echo  "common" >> .git/info/sparse-checkout  && git pull origin master'
+            cp.exec(cmdStr, {cwd : process.cwd()}, function(error,so, sr) {
+                if (error) {
+                    console.log(chalk.red(error));
+                } else {
+                    //console.log(so.trim());
+                    cp.exec('mv .tmp_common/common ./ && rm -rf .tmp_common', {cwd : process.cwd()}, function(error, so, sr) {
+                        if (error) {
+                            console.log(chalk.red(error));
+                        } else {
+                            resolve();
+                        }
+                    })
+                }
+
+            });
+        }
+    })
+}
+
+//设置php接口服务域名、端口
+function genMockServerConfig() {
+    console.log('生成mock-server配置文件...');
+    let remoteApiConfig =
+`//远程接口服务配置
+exports.remoteApiConfig = {
+    serverDomain : '', //接口服务器域名,例: m.doumi.com
+    serverPort : 80, //接口服务器端口
+    accessToken : '' //接口服务器访问token。登陆后,token为cookie字段doumi_melon的值
+}
+exports.mockServerPort = '8900'; //本地mock-server端口`
+    fs.writeFileSync('./mock-server-config.js', remoteApiConfig, {})
+
+}
+
+//启动mock-server
+function startupServer() {
+    try {
+        let mockServerConfig = require(projectRootDir + 'mock-server-config.js');
+        config.remoteRootPathConfig.beApiRootPath = mockServerConfig.remoteApiConfig.serverDomain;
+        config.remoteRootPathConfig.beApiServerPort = mockServerConfig.remoteApiConfig.serverPort;
+        config.remoteRootPathConfig.beAccessToken = mockServerConfig.remoteApiConfig.accessToken;
+        config.mockServerConfig.port = mockServerConfig.mockServerPort;
+    } catch(e) {
+        console.log(error('mock-server-config.js配置文件存在异常!将进行重写..'));
+        genMockServerConfig();
+    }
+    console.log(chalk.blue('(mock-server相关的配置信息请在mock-server-config.js中进行修改,修改后需重启server)'))
+    server.start(config);
+    console.log('mock-server启动成功!\n端口号(port):', config.mockServerConfig.port);
+    console.log('请使用 http://<ip|localhost|127.0.0.1>:' + config.mockServerConfig.port + '/<view-path> 进行访问')
+}
+
+
+//生成gitignore
+function genGitignore() {
+    console.log('生成.gitignore文件..');
+    fs.writeFileSync('./.gitignore', gitignoreTpl)
+}
+
+function genBedsLog(type) {
+    var logJson = {
+        'projectType' : type,
+        'latestUpdateCommon' : new Date()
+    }
+    fs.writeFileSync('./.beds.log.json', JSON.stringify(logJson));
+}
