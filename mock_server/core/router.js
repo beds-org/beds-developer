@@ -16,7 +16,7 @@ var less = require("less");
 var completeJs = require('./complete_js_modeule');
 var concat = require('./concat');
 var babel = require('babel-core');
-var es2015 = require('babel-preset-es2015');
+var es2015 = require('babel-preset-es2015'); //必须这样引入模块。否则babel会从业务项目根目录查找转译器
 
 var dmConfig = null;
 var fileRootPath = null;
