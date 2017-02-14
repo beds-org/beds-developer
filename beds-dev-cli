@@ -114,7 +114,7 @@ function cloneCommonModule(type) {
             cloneCommon();
         }
         function cloneCommon() {
-            let cmdStr = 'mkdir .tmp_common && cd .tmp_common &&  git init && git remote add -f origin ' + uri + ' && git config core.sparsecheckout true && echo  "common" >> .git/info/sparse-checkout  && git pull origin master'
+            let cmdStr = 'mkdir .tmp_common && cd .tmp_common &&  git init && git remote add -f origin ' + uri + ' && git config core.sparsecheckout true && echo common >> .git/info/sparse-checkout  && git pull origin master'
             cp.exec(cmdStr, {cwd : process.cwd()}, function(error,so, sr) {
                 if (error) {
                     console.log(chalk.red(error));

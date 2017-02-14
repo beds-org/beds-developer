@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "a command-line interface tool for developer,based beds",
   "main": "./beds-dev-cli",
-  "bin" : {
-    "beds-dev-cli" : "beds-dev-cli"
+  "bin": {
+    "beds-dev-cli": "beds-dev-cli"
   },
   "dependencies": {},
   "devDependencies": {
@@ -16,7 +16,8 @@
     "ejs": "^2.5.1",
     "less": "^2.5.3",
     "request": "^2.72.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "webpack": "^1.14.0"
   },
   "author": "gy",
   "license": "ISC"

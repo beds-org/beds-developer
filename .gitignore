@@ -4,84 +4,84 @@
 composer.lock
 
 # yii console command
-/yii
+    /yii
 
 # phpstorm project files
-.idea
+        .idea
 
 # netbeans project files
-nbproject
+    nbproject
 
 # zend studio for eclipse project files
-.buildpath
-.project
-.settings
+        .buildpath
+        .project
+        .settings
 
 # windows thumbnail cache
-Thumbs.db
+    Thumbs.db
 
 # composer vendor dir
-/vendor
+    /vendor
 
 # composer itself is not needed
-composer.phar
+    composer.phar
 
 # Mac DS_Store Files
-.DS_Store
+        .DS_Store
 
 # phpunit itself is not needed
-phpunit.phar
+    phpunit.phar
 # local phpunit config
-/phpunit.xml
+    /phpunit.xml
 
 
 #---------------------------
 # Mac
-.DS_Store
-.AppleDouble
-.LSOverride
+        .DS_Store
+        .AppleDouble
+        .LSOverride
 
 # Icon must end with two 
-Icon
+    Icon
 
 
 # Thumbnails
-._*
+        ._*
 
 # Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
+        .DocumentRevisions-V100
+        .fseventsd
+        .Spotlight-V100
+        .TemporaryItems
+        .Trashes
+        .VolumeIcon.icns
 
 # Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+        .AppleDB
+        .AppleDesktop
+    Network Trash Folder
+    Temporary Items
+        .apdisk
 
 #--------------------
 # Windows image file caches
-Thumbs.db
-ehthumbs.db
+    Thumbs.db
+    ehthumbs.db
 
 # Folder config file
-Desktop.ini
+    Desktop.ini
 
 # Recycle Bin used on file shares
-$RECYCLE.BIN/
+    $RECYCLE.BIN/
 
 # Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+    *.cab
+    *.msi
+    *.msm
+    *.msp
 
 # Windows shortcuts
-*.lnk
+    *.lnk
 
 
 ###--------------------------
@@ -90,61 +90,61 @@ $RECYCLE.BIN/
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion
 
-*.iml
+    *.iml
 
 ## Directory-based project format:
-.idea/
+        .idea/
 # if you remove the above rule, at least ignore the following:
 
-# User-specific stuff:
-# .idea/workspace.xml
+        # User-specific stuff:
+        # .idea/workspace.xml
 # .idea/tasks.xml
 # .idea/dictionaries
 
 # Sensitive or high-churn files:
-# .idea/dataSources.ids
+        # .idea/dataSources.ids
 # .idea/dataSources.xml
 # .idea/sqlDataSources.xml
 # .idea/dynamic.xml
 # .idea/uiDesigner.xml
 
 # Gradle:
-# .idea/gradle.xml
+        # .idea/gradle.xml
 # .idea/libraries
 
 # Mongo Explorer plugin:
-# .idea/mongoSettings.xml
+        # .idea/mongoSettings.xml
 
 ## File-based project format:
-*.ipr
-*.iws
+        *.ipr
+    *.iws
 
 ## Plugin-specific files:
 
-# IntelliJ
-/out/
+        # IntelliJ
+    /out/
 
 # mpeltonen/sbt-idea plugin
-.idea_modules/
+        .idea_modules/
 
 # JIRA plugin
-atlassian-ide-plugin.xml
+    atlassian-ide-plugin.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
+    com_crashlytics_export_strings.xml
+    crashlytics.properties
+    crashlytics-build.properties
 
 #fe build plugin for app-wap
-node_modules/
-**/webapp/**/js_combo/
+        node_modules/
+        **/webapp/**/js_combo/
 
 #publish directory
-dist/
+    dist/
 
 #common directory
-common/
-
+    common/
+    
 #config file
-mock-server-config.js
-.beds.log.json
+    mock-server-config.js
+    .beds.log.json    

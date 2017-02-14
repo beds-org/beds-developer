@@ -16,6 +16,8 @@ var less = require("less");
 var completeJs = require('./complete_js_modeule');
 var concat = require('./concat');
 var babel = require('babel-core');
+var es2015 = require('babel-preset-es2015');
+
 var dmConfig = null;
 var fileRootPath = null;
 var remoteRootPath = null;
@@ -123,6 +125,7 @@ function FileHandle(pathName) {
 FileHandle.fileTypeMAP = {
     'html' : 'html',
     'js' : 'js',
+    'vue' : 'js',
     'tpl' : 'js',
     'css' : 'css',
     'less' : 'css',
@@ -151,9 +154,9 @@ FileHandle.swfPathHandle = function() {
     return basePath.swf + this.pathName;
 }
 
+
 FileHandle.getFileContentBySync = function() {
     var _this = this;
-
     fs.readFile(this.fileAbsPath , this.fileEncoding, function(e, content) {
         if (e) {
             _this.reject(e);
@@ -173,15 +176,19 @@ FileHandle.htmlContentHandle = function() {
 }
 
 FileHandle.jsContentHandle = function() {
-    if (/\.html$/.test(this.pathName)) { //说明js在请求组件模板
+    if (/\.html$/.test(this.pathName)) { //说明js在请求组件模板,使html模板模块化
         this.fileContent = "module.exports = " + JSON.stringify(this.fileContent);
     }
-    if (this.pathName.indexOf('/js_lib/') < 0 ) {
-        this.fileContent = babel.transform(this.fileContent, {
-            presets : ['es2015']
+    if (this.pathName.indexOf('/js_lib/') < 0 ) { //处理非库目录js文件内容,库目录js文件内容直接返回
+        if (this.pathName.indexOf('_vue/') > 0) { //vue组件js
+
+        }
+        this.fileContent = babel.transform(this.fileContent, { //babel转译es6语法
+            presets : [es2015]
         }).code;
-        this.fileContent = completeJs.transport(this.pathName, this.fileContent);
+        this.fileContent = completeJs.transport(this.pathName, this.fileContent); //构建成cmd结构
     }
+
 }
 
 FileHandle.cssContentHandle = function() {

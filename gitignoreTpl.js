@@ -1,3 +1,7 @@
+/**
+ * git 的忽略模板文件
+ * @type {string}
+ */
 module.exports = `
 *-local*
 
