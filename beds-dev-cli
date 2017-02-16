@@ -79,13 +79,15 @@ function init(type) {
         projectRootDir + 'static/img/'
     ];
     dirs.forEach(dir => createDir(dir));
-    console.log('克隆通用组件...');
+    console.log('创建完毕');
+    //暂时弃用.common目录结构暂时从其他beds项目拷贝
+    /*console.log('克隆通用组件...');
     cloneCommonModule(type).then(() => {
         genMockServerConfig();
         genGitignore();
         genBedsLog(type);
         console.log('创建完毕!');
-    })
+    })*/
 }
 
 //创建目录
