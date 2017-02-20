@@ -144,7 +144,7 @@ function genMockServerConfig() {
 exports.remoteApiConfig = {
     serverDomain : '', //接口服务器域名,例: m.doumi.com
     serverPort : 80, //接口服务器端口
-    accessToken : '' //接口服务器访问token。登陆后,token为cookie字段doumi_melon的值
+    accessToken : {'doumi_melon' : ''} //接口服务器访问token。登陆后,token为cookie字段doumi_melon的值
 }
 exports.mockServerPort = '8900'; //本地mock-server端口`
     fs.writeFileSync('./mock-server-config.js', remoteApiConfig, {})
