@@ -3,7 +3,7 @@
  * @param pathConfig
  * @returns {{isPub: boolean, title: string, keywords: string, desc: string, setTitle: ejsDefaultConst.setTitle, setKeywords: ejsDefaultConst.setKeywords, setDescription: ejsDefaultConst.setDescription, beApiRootPath: (*|string), cssRootPath: *, jsRootPath: (js|string|string|string|string|string|*), imgRootPath: (string|string|string), styleFileExt: string, jsFile: string, cssFile: string, entryJsFile: string, otherFiles: string, otherCssFiles: string, appName: string, setBizJs: ejsDefaultConst.setBizJs, getBizJs: ejsDefaultConst.getBizJs, setThirdpartyJs: ejsDefaultConst.setThirdpartyJs, getThirdpartyJs: ejsDefaultConst.getThirdpartyJs, setBizCss: ejsDefaultConst.setBizCss, getBizCss: ejsDefaultConst.getBizCss, setThirdpartyCss: ejsDefaultConst.setThirdpartyCss, getThirdpartyCss: ejsDefaultConst.getThirdpartyCss}}
  */
-var ip = require("./core/ip").getLocalIP();
+var ip = require("./core/ip").ip();
 function getEjsVar(pathConfig, mockServerPort) {
     var ejsDefaultConst = {
         isPub : false,
