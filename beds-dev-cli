@@ -147,10 +147,7 @@ exports.remoteApiConfig = {
     accessToken : {'doumi_melon' : ''} //接口服务器访问token。登陆后,token为cookie字段doumi_melon的值
 }
 exports.mockServerPort = '8900'; //本地mock-server端口
-exports.compatibilityDoumiFrameworkConfig = {
-    path: /\\/lib\\/|SHFLoader|bridgeLib/,
-    content: /define\\s*\\(|requirejs\\.config/
-}
+exports.traditionJsPathReg = /\\/js_lib\\//; //传统js路径正则。对于传统js不做模块化和es6转译操作
 `
     fs.writeFileSync('./mock-server.config.js', remoteApiConfig, {})
 
@@ -170,9 +167,12 @@ function startupServer() {
         config.remoteRootPathConfig.beAccessToken = mockServerConfig.remoteApiConfig.accessToken;
         config.mockServerConfig.port = mockServerConfig.mockServerPort;
 
-        config.compatibilityDoumiFrameworkConfig = mockServerConfig.compatibilityDoumiFrameworkConfig;
+        config.traditionJsPathReg = mockServerConfig.traditionJsPathReg;
+        if (typeof mockServerConfig.mockServerPort == "undefined" || typeof mockServerConfig.traditionJsPathReg == "undefined") {
+            throw '配置文件异常';
+        }
     } catch(e) {
-        console.log(error('mock-server-config.js配置文件存在异常!将进行重写..'));
+        console.log(error('mock-server.config.js配置文件存在异常!将进行重写..'));
         genMockServerConfig();
         console.log('重写完成，请再次启动服务!');
         process.exit(0);

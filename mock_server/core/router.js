@@ -138,6 +138,7 @@ FileHandle.fileTypeMAP = {
     'jpg': 'img',
     'swf': 'swf',
 }
+
 FileHandle.htmlPathHandle = function () {
     return basePath.html + this.pathName;
 }
@@ -183,7 +184,9 @@ FileHandle.jsContentHandle = function () {
     if (/\.html$/.test(this.pathName)) { //说明js在请求组件模板,使html模板模块化
         this.fileContent = "module.exports = " + JSON.stringify(this.fileContent);
     }
-    if (!dmConfig.compatibilityDoumiFrameworkConfig.path.test(this.pathName) && !dmConfig.compatibilityDoumiFrameworkConfig.content.test(this.fileContent)) { //处理非库目录js文件内容,库目录js文件内容直接返回
+
+    var pathReg = dmConfig.traditionJsPathReg;
+    if (!pathReg || !pathReg.test(this.pathName)) { //处理非库目录js文件内容,库目录js文件内容直接返回
 
         this.fileContent = babel.transform(this.fileContent, { //babel转译es6语法
             presets: [es2015]
