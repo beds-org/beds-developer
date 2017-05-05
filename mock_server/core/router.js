@@ -143,6 +143,10 @@ FileHandle.htmlPathHandle = function () {
     return basePath.html + this.pathName;
 }
 FileHandle.jsPathHandle = function () {
+    //js加载器路径特殊处理
+    if (/bd-inject-module-loader\.js$/.test(this.pathName)) {
+        return path.join(__dirname, 'js-module-loader.js')
+    }
     if (/\.html\.js$/.test(this.pathName)) {
         this.pathName = this.pathName.replace(/\.js$/, '');
     }
@@ -175,12 +179,20 @@ FileHandle.htmlContentHandle = function () {
     try {
         //解析ejs模板
         this.fileContent = ejs.render(this.fileContent, ejsVar.getEjsVar(remoteRootPath, dmConfig.mockServerConfig.port), {root: fileRootPath.html, filename: this.fileAbsPath})
+        //在最后一个script标签（入口js）之前注入
+        this.fileContent = this.fileContent.replace(/[\s\S]*(?=<script)/, function(p1) {
+            return p1 + '\r\n<script src="/bd-inject-module-loader.js"></script>\r\n'
+        })
     } catch (e) {
         throw new Error("模板错误：" + e);
     }
 }
 
 FileHandle.jsContentHandle = function () {
+    if (/bd-inject-module-loader\.js$/.test(this.pathName)) {
+        return ;
+    }
+
     if (/\.html$/.test(this.pathName)) { //说明js在请求组件模板,使html模板模块化
         this.fileContent = "module.exports = " + JSON.stringify(this.fileContent);
     }
@@ -191,7 +203,7 @@ FileHandle.jsContentHandle = function () {
         this.fileContent = babel.transform(this.fileContent, { //babel转译es6语法
             presets: [es2015]
         }).code;
-        this.fileContent = completeJs.transport(this.pathName, this.fileContent); //构建成cmd结构
+        this.fileContent = completeJs.transport(this.pathName, this.fileContent); //构建成amd结构
     }
 
 }
