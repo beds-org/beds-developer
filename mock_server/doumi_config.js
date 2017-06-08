@@ -7,7 +7,8 @@ exports.fileRootPathConfig = {
     js: proRootPath,  // js根目录
     css: proRootPath, //less根目录
     img: proRootPath, //图片根目录
-    swf: proRootPath
+    swf: proRootPath,
+    other: proRootPath
 }
 
 //远程根路径配置

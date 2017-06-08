@@ -109,7 +109,7 @@ function FileHandle(pathName) {
     if (pos < 0) return null;
     this.realFileType = pathName.substr(pos + 1);
     this.fileType = FileHandle.fileTypeMAP[this.realFileType];
-    this.fileEncoding = (this.fileType == 'img' || this.fileType == 'swf') ? 'binary' : 'utf8';
+    this.fileEncoding = (this.fileType == 'img' || this.fileType == 'swf' || this.fileType == 'other') ? 'binary' : 'utf8';
     try {
         this.fileAbsPath = FileHandle[this.fileType + "PathHandle"].call(this);
     } catch (e) {
@@ -137,6 +137,10 @@ FileHandle.fileTypeMAP = {
     'gif': 'img',
     'jpg': 'img',
     'swf': 'swf',
+    'eot': 'other',
+    'svg': 'other',
+    'ttf': 'other',
+    'woff': 'other'
 }
 
 FileHandle.htmlPathHandle = function () {
@@ -161,6 +165,10 @@ FileHandle.imgPathHandle = function () {
 
 FileHandle.swfPathHandle = function () {
     return basePath.swf + this.pathName;
+}
+
+FileHandle.otherPathHandle = function () {
+    return basePath.other + this.pathName
 }
 
 
@@ -229,6 +237,10 @@ FileHandle.imgContentHandle = function () {
 
 FileHandle.swfContentHandle = function () {
     /*无需特别处理*/
+}
+
+FileHandle.otherContentHandle = function () {
+
 }
 
 exports.init = init;
